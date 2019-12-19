@@ -1,4 +1,5 @@
 require_relative "../util/direction"
+require_relative "../exceptions/invalid_condition"
 
 module Models
   class GameState
@@ -8,6 +9,7 @@ module Models
       @turn = turn
       @arena_size = arena_size
       @bot_states = bot_states
+      @location_conditions = {}
     end
 
     def bot_at(point)
@@ -34,6 +36,26 @@ module Models
         point.y >= 0 &&
         point.x < arena_size.width &&
         point.y < arena_size.height
+    end
+
+    def set_tile_condition(location, condition)
+      validate_condition(condition)
+      @location_conditions[location_condition_key(location)] = @location_conditions.fetch(location_condition_key(location), []).append(condition).uniq
+    end
+
+    def unset_tile_condition(location, condition)
+      validate_condition(condition)
+      @location_conditions[location_condition_key(location)] = @location_conditions.fetch(location_condition_key(location), []).delete(condition)
+    end
+
+    private
+
+    def location_condition_key(point)
+      return "#{point.x}:#{point.y}"
+    end
+
+    def validate_condition(condition)
+      raise Exceptions::InvalidconditionException.new(condition) unless [:burning].contains(condition)
     end
   end
 end

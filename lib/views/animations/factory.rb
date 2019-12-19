@@ -1,4 +1,5 @@
 require_relative "destroy_bot"
+require_relative "fire_flamethrower"
 require_relative "fire_laser"
 require_relative "lunge"
 require_relative "repair"
@@ -7,7 +8,9 @@ module Views
   module Animations
     class Factory
       def self.create_from(model)
-        if model.is_a?(Actions::Animations::FireLaser)
+        if model.is_a?(Actions::Animations::FireFlamethrower)
+          return Views::Animations::FireFlamethrower.new(model)
+        elsif model.is_a?(Actions::Animations::FireLaser)
           return Views::Animations::FireLaser.new(model)
         elsif model.is_a?(Actions::Animations::DestroyBot)
           return Views::Animations::DestroyBot.new(model)
